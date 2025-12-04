@@ -1,0 +1,30 @@
+{
+  "name": "p2p_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zaozbr/nexus-mvp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/zaozbr/nexus-mvp/issues"
+  },
+  "homepage": "https://github.com/zaozbr/nexus-mvp#readme",
+  "dependencies": {
+    "bare-path": "^3.0.0",
+    "bare-process": "^4.2.2",
+    "corestore": "^7.7.0",
+    "hyperdrive": "^13.0.2",
+    "hyperswarm": "^4.16.0",
+    "localdrive": "^2.2.0",
+    "mirror-drive": "^1.10.0"
+  }
+}
