@@ -26,5 +26,13 @@ async function main() {
     console.log(`[NEXUS MVP] Starting in ${mode.toUpperCase()} mode`);
     console.log(`[TARGET] ${targetDir}`);
 
+    // 1. Setup Corestore (Internal DB)
+    const store = new Corestore(`./storage-${mode}`);
+    await store.ready();
+
+    // 2. Setup Networking
+    const swarm = new Hyperswarm();
+    // When a peer connects, replicate the corestore data stream to them
+    swarm.on('connection', (socket) => store.replicate(socket));
 
 }
