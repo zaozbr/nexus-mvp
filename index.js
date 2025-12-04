@@ -51,4 +51,46 @@ async function main() {
     swarm.join(discovery);
     await swarm.flush(); // Wait for announcement to propagate
 
-}
+    // 5. Logic Branch
+    if (mode === 'host') {
+        console.log('\n==================================================');
+        console.log(' SHARE THIS KEY TO SYNC:');
+        console.log(' ' + hyper.key.toString('hex'));
+        console.log('==================================================\n');
+
+        // MIRROR: Local (OS) -> Hyperdrive (P2P)
+        console.log('[WATCHING] mirroring changes from Local -> P2P...');
+
+        const out = mirror(local, hyper, { live: true });
+
+        // Logging events
+        out.on('put', (src) => console.log(`[UPLOAD] Added: ${src.key}`));
+        out.on('del', (src) => console.log(`[UPLOAD] Deleted: ${src.key}`));
+
+    } else {
+        // Client Mode Check
+        if (!remoteKey) {
+            console.error('[ERROR] Client mode requires --key=<hex>');
+            process.exit(1);
+        }
+
+        console.log('[CONNECTING] Looking for Host...');
+
+        // MIRROR: Hyperdrive (P2P) -> Local (OS)
+        console.log('[WATCHING] mirroring changes from P2P -> Local...');
+
+        const inc = mirror(hyper, local, { live: true });
+
+        // Logging events
+        inc.on('put', (src) => console.log(`[DOWNLOAD] Added: ${src.key}`));
+        inc.on('del', (src) => console.log(`[DOWNLOAD] Deleted: ${src.key}`));
+    }
+} // End of main function
+
+// Execute and catch errors
+main().catch(err => {
+    console.error(err);
+    process.exit(1);
+});
+
+
