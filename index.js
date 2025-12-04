@@ -35,4 +35,20 @@ async function main() {
     // When a peer connects, replicate the corestore data stream to them
     swarm.on('connection', (socket) => store.replicate(socket));
 
+    // 3. Setup Drives
+
+    // Localdrive: Represents your real OS folder
+    const local = new Localdrive(targetDir);
+
+    // Hyperdrive: Represents the P2P Virtual Drive
+    // Client needs the remoteKey to find data. Host generates a null key (new drive).
+    const hyper = new Hyperdrive(store, remoteKey ? Buffer.from(remoteKey, 'hex') : null);
+    await hyper.ready();
+
+    // 4. Join Swarm
+    // We announce (Host) or look for (Client) the drive's specific discovery key
+    const discovery = hyper.discoveryKey;
+    swarm.join(discovery);
+    await swarm.flush(); // Wait for announcement to propagate
+
 }
